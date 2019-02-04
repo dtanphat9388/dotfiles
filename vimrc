@@ -1,18 +1,30 @@
-"runtime! debian.vim`           "enable if on ubuntu
-set nocompatible
-filetype off   " required 
-set rtp+=~/.vim/bundle/Vundle.vim
+" ############################################  Ubuntu  #############################################
+"runtime! debian.vim             "enable neu dung vim trong linux
 
-" basics
+
+" ########################################  required config  ########################################
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
 filetype plugin indent on
+
+
+" #########################################  basic config  ##########################################
 syntax on                        " enable syntax color
-"set number                       " show current line number
-set relativenumber
+set t_Co=256
+" ------- mouse --------
 set mouse=a                      " use mouse click anywhere in vim panel
+set ttymouse=xterm2              " enable mouse interaction: resize panel
+" ------- editor > line number --------
+"set number                      " show current line number
+set relativenumber
+set cursorline	                 " highline cursor line
+" ------- editor > search --------
 set incsearch
 set hlsearch
 set ignorecase
 set smartcase
+" ------- editor > tabstop --------
 set tabstop=2
 set softtabstop=0
 set shiftwidth=4
@@ -20,10 +32,12 @@ set expandtab
 set nobackup
 set noswapfile
 set nowrap
-set ttymouse=xterm2              " enable mouse interaction: resize panel
+set conceallevel=0	             " show quotes in json file
+set foldmethod=syntax	           " set folding by (`syntax` | `indent`)
+set pastetoggle=<F2>             " toggle between `:set paste` and `:set nopaste`
+
 
 " ############################################  PLUGINS  ############################################
-
 call vundle#begin()
 " ------- basic config --------
 Plugin 'VundleVim/Vundle.vim'                       " package management
@@ -58,24 +72,24 @@ Plugin 'scrooloose/syntastic'
 Plugin 'jiangmiao/auto-pairs'
 
 call vundle#end()
-filetype plugin indent on    " required 
+filetype plugin indent on                           " *** required ***
 
-" ############################################  MAP KEYS CONFIG  ############################################
+" #######################################  MAP KEYS CONFIG  #######################################
 
 " -------- VIM --------
-":let mapleader = "-"                                                      " --- see :help mapleader
+":let mapleader = "-"                                                      " --- see :help mapleader (default: '\')
 ":let maplocalleader = ""                                                  " --- see :help maplocalleader
 
-nnoremap <C-j> :m .+1<CR>==                                               " --- move lines 
+map <Leader>p :set paste<CR>o<esc>"*]p:set nopaste<cr>                     " --- paste > turnon paste mode > new line > paste from clipboard > turnoff paste mode
+
+nnoremap <C-j> :m .+1<CR>==                                                " --- move lines 
 nnoremap <C-k> :m .-2<CR>==
 inoremap <C-j> <ESC>:m .+1<CR>==gi
 inoremap <C-k> <ESC>:m .-2<CR>==gi
 vnoremap <C-j> :m '>+1<CR>gv=gv
 vnoremap <C-k> :m '<-2<CR>gv=gv
 
-inoremap jk <ESC>
-let mapleader = "\<Space>"
-set pastetoggle=<F2>
+inoremap jk <ESC>                                                         " `jk` or ESC
 
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')                     " --- j/k will move virtual lines (lines that wrap)
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
@@ -101,7 +115,7 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif	" --- C
 
 " ############################################  PLUGINS CONFIG ############################################
 
-" ------------ THEME ------------
+" ------------ Theme ------------
 
 if (empty($TMUX))
   if (has("nvim"))
@@ -112,12 +126,10 @@ if (empty($TMUX))
   endif
 endif
 
-syntax on
 set bg=dark                                                      
 colorscheme gruvbox
 
-" Custom airline
-set t_Co=256                                                               
+" ------------ Theme > Airline ------------                                              
 let g:airline_theme='onedark'
 let g:airline_powerline_fonts = 1
 "let g:airline#extensions#tabline#enabled = 1                       " --- enabled airline
